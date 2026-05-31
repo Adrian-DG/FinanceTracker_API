@@ -24,20 +24,5 @@ namespace Domain.Entities.Liability
 		public SyncStatus SyncStatus { get; set; }
 		public DateTime CreateAtUtc { get; set; }
 		public DateTime UpdateAtUtc { get; set; }
-
-		// Methods 
-
-		public void UpdateRemainingAmmount(decimal amount)
-		{
-			RemainingAmmount = amount;
-		}
-
-		public void ApplyPayment(decimal paymentAmount)
-		{
-			if (paymentAmount > RemainingAmmount)
-				throw new InvalidOperationException("El pago no puede ser mayor al monto restante");
-
-			RemainingAmmount -= paymentAmount;
-		}
 	}
 }
