@@ -3,7 +3,6 @@ using Domain.Enums;
 using Domain.Metadata;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Domain.Entities.Liability
 {
@@ -17,6 +16,10 @@ namespace Domain.Entities.Liability
 
 		public Guid BankId { get; set; }
 		public virtual Bank? Bank { get; set; }
+
+		public virtual ICollection<LoanPaymentAllocation>? PaymentAllocations { get; set; }
+		public virtual ICollection<LoanRateHistory>? LoanRates { get; set; }
+		public virtual ICollection<LoanAmortizationEntry>? AmortizationSchedule { get; set; }
 
 		public SyncStatus SyncStatus { get; set; }
 		public DateTime CreateAtUtc { get; set; }

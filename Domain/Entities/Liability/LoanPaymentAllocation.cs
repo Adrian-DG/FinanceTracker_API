@@ -12,7 +12,8 @@ namespace Domain.Entities.Liability
 
 		public decimal PrincipalPaid { get; set; }
 		public decimal InterestPaid { get; set; }
-
+		public bool IsExtraordinary { get; set; }
+		public ExtraordinaryPaymentTarget ExtraordinaryPaymentTarget { get; set; } = ExtraordinaryPaymentTarget.NONE;
 		public Guid LoanId { get; set; }
 		public virtual Loan? Loan { get; set; }
 		public Guid TransactionId { get; set; }
