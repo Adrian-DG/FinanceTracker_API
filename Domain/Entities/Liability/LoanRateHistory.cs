@@ -13,10 +13,10 @@ namespace Domain.Entities.Liability
 		public DateOnly EffectiveDate { get; set; }
 		public string? Note { get; set; }
 
-		public int LoanId { get; set; }
+		public Guid LoanId { get; set; }
 		public virtual Loan? Loan { get; set; }
 
-		public int BankId { get; set; }
+		public Guid BankId { get; set; }
 		public virtual Bank? Bank { get; set; }
 
 		public SyncStatus SyncStatus { get; set; }

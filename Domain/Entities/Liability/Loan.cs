@@ -15,8 +15,6 @@ namespace Domain.Entities.Liability
 		public int TotalTermMonths { get; set; }
 		public decimal CurrentMontlyFee { get; set; }
 
-		public Guid LoanTemplate { get; set; }
-
 		public Guid BankId { get; set; }
 		public virtual Bank? Bank { get; set; }
 
