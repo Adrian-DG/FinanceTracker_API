@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System;
 
 namespace Domain.Metadata
 {
 	public interface IAuditableEntity
 	{
-		public DateTime CreateAtUtc { get; set; }
-		public DateTime UpdateAtUtc { get; set; }
+		DateTime CreatedAtUtc { get; }
+		DateTime UpdatedAtUtc { get; }
 	}
 }

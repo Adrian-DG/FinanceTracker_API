@@ -1,26 +1,33 @@
-﻿using Domain.Entities.Assets;
-using Domain.Enums;
-using Domain.Metadata;
+using Domain.Common;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Domain.Entities.Liability
 {
-	public class LoanRateHistory : BaseEntity, ISyncEntity, IAuditableEntity
+	/// <summary>
+	/// Tasa pactada con el banco y su fecha de vigencia. El préstamo la registra en
+	/// cada revisión para poder reconstruir cómo evolucionó el costo del crédito.
+	/// </summary>
+	public class LoanRateHistory : AuditableEntity
 	{
-		public decimal Rate { get; set; }
-		public DateOnly EffectiveDate { get; set; }
-		public string? Note { get; set; }
+		private LoanRateHistory() { }
 
-		public Guid LoanId { get; set; }
-		public virtual Loan? Loan { get; set; }
+		/// <summary>Tasa anual expresada como porcentaje (12.5 significa 12.5 %).</summary>
+		public decimal Rate { get; private set; }
 
-		public Guid BankId { get; set; }
-		public virtual Bank? Bank { get; set; }
+		public DateOnly EffectiveDate { get; private set; }
 
-		public SyncStatus SyncStatus { get; set; }
-		public DateTime CreateAtUtc { get; set; }
-		public DateTime UpdateAtUtc { get; set; }
+		public string? Note { get; private set; }
+
+		public Guid LoanId { get; private set; }
+
+		public Loan? Loan { get; private set; }
+
+		internal static LoanRateHistory Create(Guid loanId, decimal rate, DateOnly effectiveDate, string? note) => new()
+		{
+			LoanId = Guard.AgainstEmpty(loanId),
+			Rate = Guard.AgainstNegative(rate),
+			EffectiveDate = effectiveDate,
+			Note = string.IsNullOrWhiteSpace(note) ? null : note.Trim()
+		};
 	}
 }

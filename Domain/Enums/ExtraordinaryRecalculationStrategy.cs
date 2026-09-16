@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
 
-	namespace Domain.Enums
+namespace Domain.Enums
+{
+	/// <summary>Qué hacer con el cuadro de amortización después de un abono a capital.</summary>
+	public enum ExtraordinaryRecalculationStrategy
 	{
-		public enum ExtraordinaryRecalculationStrategy
-		{
-			[Description("No recalculation is performed. The loan schedule remains unchanged, and the extraordinary payment is simply applied to the next due payment.")]
-			REDUCE_TERM = 1,
+		[Description("Se mantiene la cuota mensual y el cuadro se recalcula sobre el nuevo saldo, por lo que el préstamo se salda en menos cuotas.")]
+		REDUCE_TERM = 1,
 
-			[Description("The loan schedule is recalculated to reduce the installment amount while keeping the original loan term unchanged. The extraordinary payment is applied to the next due payment, and subsequent installments are adjusted accordingly.")]
-			REDUCE_INSTALLMENT = 2
-		}
+		[Description("Se mantiene la cantidad de cuotas pendientes y se recalcula el monto de la cuota sobre el nuevo saldo, por lo que la mensualidad baja.")]
+		REDUCE_INSTALLMENT = 2
 	}
+}

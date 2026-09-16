@@ -1,23 +1,62 @@
-﻿using Domain.Enums;
-using Domain.Metadata;
+using Domain.Common;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Transactions;
+using System.Linq;
 
 namespace Domain.Entities.Assets
 {
-	public class Category : BaseEntity, ISyncEntity, IAuditableEntity
+	/// <summary>
+	/// Clasificación de primer nivel de los movimientos. Es la raíz del agregado
+	/// que contiene sus subcategorías.
+	/// </summary>
+	public class Category : CatalogEntity
 	{
-		public required string Name { get; set; }
-		public string? Description { get; set; }
-		public string Icon { get; set; } = "default_icon";
-		public string ColorHex { get; set; } = "#000000";
-		public bool IsSystemDefault { get; set; } = false;
-		public virtual ICollection<Transaction>? Transactions { get; set; }
+		private readonly List<SubCategory> _subCategories = new();
 
-		public SyncStatus SyncStatus { get; set; }
-		public DateTime CreateAtUtc { get; set; }
-		public DateTime UpdateAtUtc { get; set; }
+		private Category() { }
+
+		public IReadOnlyCollection<SubCategory> SubCategories => _subCategories.AsReadOnly();
+
+		public static Category Create(
+			string name,
+			string? description = null,
+			string? icon = null,
+			string? colorHex = null,
+			bool isSystemDefault = false)
+		{
+			var category = new Category();
+			category.SetDescriptor(name, description, icon, colorHex, isSystemDefault);
+
+			return category;
+		}
+
+		public SubCategory AddSubCategory(
+			string name,
+			string? description = null,
+			string? icon = null,
+			string? colorHex = null,
+			bool isSystemDefault = false)
+		{
+			var normalized = Guard.AgainstNullOrWhiteSpace(name).ToUpperInvariant();
+
+			Guard.Against(
+				_subCategories.Any(x => !x.IsDeleted && x.Name.ToUpperInvariant() == normalized),
+				$"La categoría '{Name}' ya tiene una subcategoría llamada '{name}'.");
+
+			var subCategory = SubCategory.Create(Id, name, description, icon ?? Icon, colorHex ?? ColorHex, isSystemDefault);
+			_subCategories.Add(subCategory);
+			MarkUpdated();
+
+			return subCategory;
+		}
+
+		public void RemoveSubCategory(Guid subCategoryId)
+		{
+			var subCategory = _subCategories.SingleOrDefault(x => x.Id == subCategoryId)
+				?? throw new DomainException($"La subcategoría '{subCategoryId}' no pertenece a la categoría '{Name}'.");
+
+			subCategory.Delete();
+			MarkUpdated();
+		}
 	}
 }

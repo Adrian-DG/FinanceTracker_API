@@ -1,23 +1,32 @@
-﻿using Domain.Enums;
-using Domain.Metadata;
+using Domain.Common;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Transactions;
 
 namespace Domain.Entities.Assets
 {
-	public class SubCategory : BaseEntity, ISyncEntity, IAuditableEntity
+	/// <summary>
+	/// Clasificación de segundo nivel. Solo existe dentro de una categoría:
+	/// se crea a través de <see cref="Category.AddSubCategory"/>.
+	/// </summary>
+	public class SubCategory : CatalogEntity
 	{
-		public required string Name { get; set; }
-		public string? Description { get; set; }
-		public string Icon { get; set; } = "default_icon";
-		public string ColorHex { get; set; } = "#000000";
-		public bool IsSystemDefault { get; set; } = false;
-		public virtual ICollection<Transaction>? Transactions { get; set; }
+		private SubCategory() { }
 
-		public SyncStatus SyncStatus { get; set; }
-		public DateTime CreateAtUtc { get; set; }
-		public DateTime UpdateAtUtc { get; set; }
+		public Guid CategoryId { get; private set; }
+
+		public Category? Category { get; private set; }
+
+		internal static SubCategory Create(
+			Guid categoryId,
+			string name,
+			string? description,
+			string? icon,
+			string? colorHex,
+			bool isSystemDefault)
+		{
+			var subCategory = new SubCategory { CategoryId = Guard.AgainstEmpty(categoryId) };
+			subCategory.SetDescriptor(name, description, icon, colorHex, isSystemDefault);
+
+			return subCategory;
+		}
 	}
 }
