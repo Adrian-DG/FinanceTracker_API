@@ -1,12 +1,12 @@
-﻿using Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Domain.Enums;
 
 namespace Domain.Metadata
 {
+	/// <summary>
+	/// Marca las entidades que viajan en el protocolo de sincronización con la app móvil.
+	/// </summary>
 	public interface ISyncEntity
-	{		
-		public SyncStatus SyncStatus { get; set; }
+	{
+		SyncStatus SyncStatus { get; }
 	}
 }

@@ -1,17 +1,48 @@
-﻿using Domain.Enums;
-using Domain.Metadata;
+using Domain.Common;
+using Domain.Enums;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Domain.Entities.Assets
 {
-	public class CreditCardGroup : BaseEntity, ISyncEntity
+	/// <summary>
+	/// Agrupación de consumos dentro de una tarjeta (por ejemplo "Suscripciones" o
+	/// "Viajes"). Lleva su propio subtotal de deuda y solo se crea desde la tarjeta.
+	/// </summary>
+	public class CreditCardGroup : CatalogEntity
 	{
-		public required string Name { get; set; }
-		public CurrencyCode Currency { get; set; }
-		public Guid CardId { get; set; }
-		public virtual CreditCard? Card { get; set; }
-		public SyncStatus SyncStatus { get; set; }
+		private CreditCardGroup() { }
+
+		public CurrencyCode Currency { get; private set; }
+
+		public decimal CurrentBalance { get; private set; }
+
+		public Guid CardId { get; private set; }
+
+		public CreditCard? Card { get; private set; }
+
+		internal static CreditCardGroup Create(Guid cardId, string name, CurrencyCode currency, string? icon, string? colorHex)
+		{
+			var group = new CreditCardGroup
+			{
+				CardId = Guard.AgainstEmpty(cardId),
+				Currency = currency
+			};
+
+			group.SetDescriptor(name, description: null, icon, colorHex, isSystemDefault: false);
+
+			return group;
+		}
+
+		internal void Charge(decimal amount)
+		{
+			CurrentBalance += amount;
+			MarkUpdated();
+		}
+
+		internal void Relieve(decimal amount)
+		{
+			CurrentBalance -= amount;
+			MarkUpdated();
+		}
 	}
 }
