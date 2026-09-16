@@ -16,9 +16,9 @@ namespace Domain.Entities.Ledger
 
 		// Navigation properties
 
-		public int CategoryId { get; set; }
+		public Guid CategoryId { get; set; }
 		public virtual Category? Category { get; set; }
-		public int SubCategoryId { get; set; }
+		public Guid SubCategoryId { get; set; }
 		public virtual SubCategory? SubCategory { get; set; }
 
 		// Source account (EXPENSE, TRANSFER, CREDIT_CARD_PAYMENT, LOAN_PAYMENT)
@@ -39,7 +39,7 @@ namespace Domain.Entities.Ledger
 		public Guid? TransactionTemplateId { get; set; }
 		public virtual TransactionTemplate? TransactionTemplate { get; set; }
 
-		public int BankId { get; set; }
+		public Guid BankId { get; set; }
 		public virtual Bank? Bank { get; set; }
 
 
