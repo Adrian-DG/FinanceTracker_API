@@ -1,4 +1,5 @@
-﻿using Domain.Enums;
+﻿using Domain.Entities.Ledger;
+using Domain.Enums;
 using Domain.Metadata;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,7 @@ namespace Domain.Entities.Assets
 		public DateTime CreateAtUtc { get; set; }
 		public DateTime UpdateAtUtc { get; set; }
 
+		public virtual ICollection<Transaction>? Transactions { get; set; }
 		
 	}
 }
